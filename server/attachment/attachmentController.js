@@ -10,10 +10,7 @@ exports.getAllAttachments = catchAsync(async (req, res, next) => {
     const queryBuilder = new QueryBuilder(req.query)
 
     queryBuilder
-        .filter()
         .paginate()
-        .limitFields()
-        .search()
         .sort()
 
     let allAttachments = await Attachment.findAndCountAll(queryBuilder.queryOptions);
@@ -95,7 +92,7 @@ exports.updateAttachment = catchAsync(async (req, res, next) => {
     };
 
     await fileUploader(files[0]);
-    console.log(file)
+
     const updatedAttachment = await attachmentById.update(file);
     res.json({
         status: "success",

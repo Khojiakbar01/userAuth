@@ -206,7 +206,6 @@ exports.logout = async (req, res,next) => {
     user.iat=0
     user.exp=0
 
-    console.log(user)
 
     res.json({
         status: 'success',

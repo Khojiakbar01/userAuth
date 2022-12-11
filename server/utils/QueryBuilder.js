@@ -1,65 +1,9 @@
-const {Op} = require("sequelize");
-
-const excludeParams = ["page", "size", "fields", "search", 'sort']
-const operators = ['lte', 'gte', 'gt', 'lt', 'in']
-
-
 class QueryBuilder {
     constructor(queryParams) {
         this.queryParams = queryParams;
         this.queryOptions = {}
     }
 
-    filter() {
-        const filterFields = {...this.queryParams}
-        excludeParams.forEach(p => delete filterFields[p])
-
-        const filterObject = {};
-
-        Object.keys(filterFields).forEach(k => {
-            const filterItem = filterFields[k];
-            if (typeof filterItem === 'object') {
-                Object.keys(filterItem).forEach(ik => {
-                        if (Object.keys(filterFields[k]).length > 1) {
-                            if (filterObject[k]) {
-                                filterObject[k] = {...{[Op[ik]]: filterItem[ik]}, ...filterObject[k]}
-                            } else {
-                                filterObject[k] = {[Op[ik]]: filterItem[ik]}
-                            }
-                            return this;
-                        }
-                        if (Object.keys(filterFields[k])[0] === 'in') {
-                            filterObject[k] = {[Op[ik]]: filterItem[ik].split(',')}
-                            return this;
-                        }
-
-                        if (operators.includes(ik)) {
-                            filterObject[k] = {[Op[ik]]: filterItem[ik]}
-                        } else {
-                            filterObject[k] = {[Op.eq]: filterItem}
-                        }
-                    }
-                )
-            }
-        });
-
-        if (this.queryOptions.where) {
-            this.queryOptions.where = {...filterObject, ...this.queryOptions.where}
-        } else {
-            this.queryOptions.where = filterObject
-        }
-
-        return this
-
-    }
-
-    limitFields() {
-        if (this.queryParams.fields) {
-            const attributes = this.queryParams.fields.split(",")
-            this.queryOptions.attributes = attributes
-        }
-        return this
-    }
 
     paginate() {
         const page = this.queryParams.page ||= 1;
@@ -71,22 +15,7 @@ class QueryBuilder {
         return this;
     }
 
-    search(searchFields) {
-        if (!this.queryParams.search) return this;
 
-        const searchObj = {
-            [Op.or]:
-                searchFields.map(field => ({[field]: {[Op.iLike]: `%${this.queryParams.search}%`}}))
-        }
-        if (this.queryOptions.where) {
-            this.queryOptions.where = {...searchObj, ...this.queryOptions.where}
-        } else {
-            this.queryOptions.where = searchObj
-
-        }
-        return this
-
-    }
 
     createPagination(queryResult) {
 
