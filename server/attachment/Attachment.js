@@ -29,11 +29,6 @@ const Attachment = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        isPermanent: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: false,
-        },
     },
     {
         underscored: true,
