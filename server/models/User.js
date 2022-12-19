@@ -1,18 +1,24 @@
 const sequelize = require('../config/database/db')
 const {DataTypes} = require('sequelize')
 const bcrypt = require('bcrypt')
+const Post = require('./Post')
+
 
 const User = sequelize.define('users', {
         id: {
             primaryKey: true,
-            type: DataTypes.STRING,
-            allowNull:false
+            type: DataTypes.INTEGER,
+            autoIncrement: true
         },
         password: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {len: {args: [6], msg: 'at least six characters'}}
-
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {isEmail: {args: true, msg: 'please enter a valid email'}}
         },
     }, {
         underscored: true,
@@ -24,5 +30,8 @@ const User = sequelize.define('users', {
 
     }
 )
+
+User.hasMany(Post, {as: "post", onDelete: "cascade"})
+Post.belongsTo(User, {as: 'user'})
 
 module.exports = User

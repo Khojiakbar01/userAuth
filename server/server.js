@@ -5,9 +5,8 @@ const app = require('./app')
 
 
 //models
-require('./user/User')
-
-
+require('./models/User')
+require('./models/Post')
 
 // const start =()=>{
 //     try{
@@ -17,8 +16,6 @@ db.authenticate().then(() => {
 }).catch((error) => {
     console.log(error)
 })
-
-
 
 // }
 

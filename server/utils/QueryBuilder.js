@@ -7,7 +7,7 @@ class QueryBuilder {
 
     paginate() {
         const page = this.queryParams.page ||= 1;
-        const limit = this.queryParams.list_size ||= 10;
+        const limit = this.queryParams.size ||= 10;
 
 
         this.queryOptions.limit = +limit;
