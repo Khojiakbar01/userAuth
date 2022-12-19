@@ -6,7 +6,7 @@ const authMiddleware = require('../middlewares/authMiddleware')
 const authController = require('../controllers/authController')
 
 const router = express.Router()
-// router.route('/').get(authMiddleware, authController.getAllUsers)
+
 
 router.get('/', authController.getAllUsers)
 
